@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ilja van heugten</title>
 
 <style>
@@ -83,6 +84,30 @@ h1{
     display:block;
     user-drag: none;
     user-select: none;
+}
+
+/* MOBILE */
+@media (max-width:700px){
+
+body{
+    margin:20px;
+    font-size:18px;
+}
+
+h1{
+    font-size:9vw;
+    margin-bottom:40px;
+}
+
+.project-title-left,
+.project-title-right{
+    font-size:5vw;
+}
+
+.images img{
+    height:65vw;
+}
+
 }
 </style>
 </head>
@@ -178,7 +203,6 @@ h1{
 </div>
 
 <script>
-// Drag to scroll
 const sliders = document.querySelectorAll('.images');
 
 sliders.forEach(slider => {
