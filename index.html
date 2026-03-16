@@ -25,6 +25,25 @@ h1{
     margin-bottom:50px;
     letter-spacing:1px;
     font-weight:normal;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+}
+
+h1 a{
+    display:inline-flex;
+    align-items:center;
+    color:white;
+    text-decoration:none;
+}
+
+h1 svg{
+    width:1em;
+    height:1em;
+    fill:none;
+    stroke:white;
+    stroke-width:2;
 }
 
 .project{
@@ -121,7 +140,7 @@ h1{
 #lightbox{
     position:fixed;
     inset:0;
-    background: rgba(0,0,0,0.75); /* semi-transparent background */
+    background: rgba(0,0,0,0.9); /* semi-transparent background */
     display:none;
     align-items:center;
     justify-content:center;
@@ -226,9 +245,15 @@ h1{
 
 <body>
 
-<h1>ilja van heugten</h1>
+<h1>
+    ilja van heugten
+    <a href="https://instagram.com/iljavanheugten" target="_blank" aria-label="Instagram">
+        <img src="instagram.webp" alt="Instagram"
+             style="width:0.8em; height:0.8em; filter: invert(1); display:inline-block; transform: translateY(-3px);">
+    </a>
+</h1>
 
-<!-- All projects included here (same as before) -->
+<!-- Project 1 -->
 <div class="project">
   <div class="project-header">
     <div class="project-title-left">even voor eeuwig (2026)</div>
@@ -339,7 +364,7 @@ h1{
 </div>
 
 <script>
-// Drag to scroll
+// Drag scroll function
 function initDragScroll(container){
     let isDown=false,startX,scrollStart;
     container.querySelectorAll('img').forEach(img=>img.draggable=false);
@@ -359,11 +384,9 @@ function initDragScroll(container){
         container.scrollLeft=scrollStart-walk;
     });
 }
-
-// Init main images scroll
 document.querySelectorAll('.images').forEach(initDragScroll);
 
-// Lightbox
+// Lightbox logic
 const lightbox=document.getElementById("lightbox");
 const lightboxImg=document.getElementById("lightbox-img");
 const thumbsContainer=document.querySelector(".lightbox-thumbs");
@@ -373,14 +396,24 @@ const next=document.getElementById("next");
 let currentImages=[];
 let currentIndex=0;
 
-// Disable lightbox on mobile
-if(window.innerWidth > 700){
+// Desktop only
+if(window.innerWidth>700){
     document.querySelectorAll(".images img").forEach(img=>{
-        img.addEventListener("click", ()=>{
-            const projectImages=[...img.closest(".images").querySelectorAll("img")];
-            currentImages=projectImages.map(i=>i.src);
-            currentIndex=projectImages.indexOf(img);
-            openLightbox();
+        let startX=0, startY=0, isDragging=false;
+
+        img.addEventListener("mousedown", e=>{
+            startX=e.clientX; startY=e.clientY; isDragging=false;
+        });
+        img.addEventListener("mousemove", e=>{
+            if(Math.abs(e.clientX-startX)>5 || Math.abs(e.clientY-startY)>5) isDragging=true;
+        });
+        img.addEventListener("mouseup", e=>{
+            if(!isDragging){
+                const projectImages=[...img.closest(".images").querySelectorAll("img")];
+                currentImages=projectImages.map(i=>i.src);
+                currentIndex=projectImages.indexOf(img);
+                openLightbox();
+            }
         });
     });
 }
@@ -401,18 +434,34 @@ function renderThumbs(){
     currentImages.forEach((src,i)=>{
         const t=document.createElement("img");
         t.src=src;
-        t.onclick=()=>{ currentIndex=i; updateImage(); };
         thumbsContainer.appendChild(t);
     });
     initDragScroll(thumbsContainer);
+
+    // Drag-safe click for thumbnails
+    thumbsContainer.querySelectorAll("img").forEach(img=>{
+        let startX=0,startY=0,isDragging=false;
+        img.addEventListener("mousedown", e=>{startX=e.clientX; startY=e.clientY; isDragging=false;});
+        img.addEventListener("mousemove", e=>{ if(Math.abs(e.clientX-startX)>5 || Math.abs(e.clientY-startY)>5) isDragging=true;});
+        img.addEventListener("mouseup", e=>{
+            if(!isDragging){
+                const index=Array.from(img.parentNode.children).indexOf(img);
+                currentIndex=index;
+                updateImage();
+            }
+        });
+    });
 }
 
 prev.onclick=()=>{ currentIndex=(currentIndex-1+currentImages.length)%currentImages.length; updateImage(); };
 next.onclick=()=>{ currentIndex=(currentIndex+1)%currentImages.length; updateImage(); };
 
-// Click outside lightbox-inner closes
-lightbox.addEventListener("click",e=>{
-    if(e.target===lightbox) lightbox.style.display="none";
+// Close lightbox on click outside
+lightbox.addEventListener("click", e=>{ if(e.target===lightbox) lightbox.style.display="none"; });
+
+// Close lightbox with Escape
+window.addEventListener("keydown", e=>{
+    if(e.key==="Escape" && lightbox.style.display==="flex") lightbox.style.display="none";
 });
 </script>
 
