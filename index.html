@@ -93,7 +93,6 @@ h1{
 }
 
 @media (max-width: 700px){
-
     body{
         margin:20px;
         font-size:18px;
@@ -116,11 +115,102 @@ h1{
     .images img{
         height:150px;
     }
-
 }
-    
+
+/* lightbox */
+#lightbox{
+    position:fixed;
+    inset:0;
+    background: rgba(0,0,0,0.9); /* more transparent */
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:1000;
+}
+
+.lightbox-inner{
+    width:95%;
+    max-width:1200px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.lightbox-top{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    width:100%;
+    justify-content:center;
+    position:relative;
+}
+
+#lightbox-img{
+    width:100%;
+    height:auto;
+    display:block;
+    max-height:80vh;
+}
+
+#prev,
+#next{
+    background:none;
+    border:none;
+    color:white;
+    font-size:50px;
+    cursor:pointer;
+    user-select:none;
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:10;
+}
+
+#prev{ left:-60px; }
+#next{ right:-60px; }
+
+.lightbox-thumbs{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+    overflow-x:auto;
+    padding-bottom:6px;
+    cursor: grab;
+    width:100%;
+    max-width:100%;
+    scrollbar-width: thin;
+    scrollbar-color: #555 black;
+}
+
+.lightbox-thumbs::-webkit-scrollbar {
+    height: 10px;
+}
+
+.lightbox-thumbs::-webkit-scrollbar-track {
+    background: black;
+}
+
+.lightbox-thumbs::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 5px;
+}
+
+.lightbox-thumbs::-webkit-scrollbar-thumb:hover {
+    background-color: #888;
+}
+
+.lightbox-thumbs img{
+    height:100px;
+    cursor:pointer;
+    opacity:0.6;
+    flex-shrink:0;
+}
+
+.lightbox-thumbs img.active{
+    opacity:1;
+}
 </style>
-    
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 </head>
@@ -195,7 +285,7 @@ h1{
 <!-- project 3 -->
 <div class="project">
   <div class="project-header">
-    <div class="project-title-left">zullen we een stukje rijden	(2025)</div>
+    <div class="project-title-left">zullen we een stukje rijden (2025)</div>
     <div class="project-title-right">dop, editor & colorist</div>
   </div>
   <div class="images">
@@ -227,47 +317,90 @@ h1{
   </div>
 </div>
 
+<!-- lightbox -->
+<div id="lightbox">
+    <div class="lightbox-inner">
+        <div class="lightbox-top">
+            <button id="prev">&#10094;</button>
+            <img id="lightbox-img">
+            <button id="next">&#10095;</button>
+        </div>
+        <div class="lightbox-thumbs"></div>
+    </div>
+</div>
+
 <script>
 // Drag to scroll
-const sliders = document.querySelectorAll('.images');
-
-sliders.forEach(slider => {
-    let isDown = false;
-    let startX;
-    let scrollStart;
-
-    slider.querySelectorAll('img').forEach(img => img.draggable = false);
-
-    slider.addEventListener('mousedown', (e) => {
-        if (e.button !== 0) return;
-        isDown = true;
-        slider.style.cursor = 'grabbing';
-        startX = e.clientX;
-        scrollStart = slider.scrollLeft;
+function initDragScroll(container){
+    let isDown=false,startX,scrollStart;
+    container.querySelectorAll('img').forEach(img=>img.draggable=false);
+    container.addEventListener('mousedown',e=>{
+        if(e.button!==0) return;
+        isDown=true;
+        container.style.cursor='grabbing';
+        startX=e.clientX;
+        scrollStart=container.scrollLeft;
     });
-
-    slider.addEventListener('mouseup', () => {
-        isDown = false;
-        slider.style.cursor = 'grab';
-    });
-
-    slider.addEventListener('mouseleave', () => {
-        isDown = false;
-        slider.style.cursor = 'grab';
-    });
-
-    slider.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
+    container.addEventListener('mouseup',()=>{ isDown=false; container.style.cursor='grab'; });
+    container.addEventListener('mouseleave',()=>{ isDown=false; container.style.cursor='grab'; });
+    container.addEventListener('mousemove',e=>{
+        if(!isDown) return;
         e.preventDefault();
-        const x = e.clientX;
-        const walk = (x - startX) * 2;
-        slider.scrollLeft = scrollStart - walk;
+        const walk=(e.clientX-startX)*2;
+        container.scrollLeft=scrollStart-walk;
     });
+}
 
-    window.addEventListener('mouseup', () => {
-        isDown = false;
-        slider.style.cursor = 'grab';
+// Init main images scroll
+document.querySelectorAll('.images').forEach(initDragScroll);
+
+// Lightbox
+const lightbox=document.getElementById("lightbox");
+const lightboxImg=document.getElementById("lightbox-img");
+const thumbsContainer=document.querySelector(".lightbox-thumbs");
+const prev=document.getElementById("prev");
+const next=document.getElementById("next");
+
+let currentImages=[];
+let currentIndex=0;
+
+document.querySelectorAll(".images img").forEach(img=>{
+    img.addEventListener("click", ()=>{
+        const projectImages=[...img.closest(".images").querySelectorAll("img")];
+        currentImages=projectImages.map(i=>i.src);
+        currentIndex=projectImages.indexOf(img);
+        openLightbox();
     });
+});
+
+function openLightbox(){
+    lightbox.style.display="flex";
+    renderThumbs();
+    updateImage();
+}
+
+function updateImage(){
+    lightboxImg.src=currentImages[currentIndex];
+    [...thumbsContainer.children].forEach((t,i)=>t.classList.toggle("active",i===currentIndex));
+}
+
+function renderThumbs(){
+    thumbsContainer.innerHTML="";
+    currentImages.forEach((src,i)=>{
+        const t=document.createElement("img");
+        t.src=src;
+        t.onclick=()=>{ currentIndex=i; updateImage(); };
+        thumbsContainer.appendChild(t);
+    });
+    initDragScroll(thumbsContainer);
+}
+
+prev.onclick=()=>{ currentIndex=(currentIndex-1+currentImages.length)%currentImages.length; updateImage(); };
+next.onclick=()=>{ currentIndex=(currentIndex+1)%currentImages.length; updateImage(); };
+
+// Click outside lightbox-inner closes
+lightbox.addEventListener("click",e=>{
+    if(e.target===lightbox) lightbox.style.display="none";
 });
 </script>
 
