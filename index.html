@@ -121,7 +121,7 @@ h1{
 #lightbox{
     position:fixed;
     inset:0;
-    background: rgba(0,0,0,0.9); /* more transparent */
+    background: rgba(0,0,0,0.75); /* semi-transparent background */
     display:none;
     align-items:center;
     justify-content:center;
@@ -169,6 +169,7 @@ h1{
 #prev{ left:-60px; }
 #next{ right:-60px; }
 
+/* Thumbnails row fully opaque */
 .lightbox-thumbs{
     display:flex;
     gap:10px;
@@ -178,6 +179,7 @@ h1{
     cursor: grab;
     width:100%;
     max-width:100%;
+    background:black; /* fully opaque */
     scrollbar-width: thin;
     scrollbar-color: #555 black;
 }
@@ -209,6 +211,13 @@ h1{
 .lightbox-thumbs img.active{
     opacity:1;
 }
+
+/* Disable lightbox entirely on small screens */
+@media (max-width: 700px){
+    #lightbox{
+        display:none !important;
+    }
+}
 </style>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -219,7 +228,7 @@ h1{
 
 <h1>ilja van heugten</h1>
 
-<!-- project 1 -->
+<!-- All projects included here (same as before) -->
 <div class="project">
   <div class="project-header">
     <div class="project-title-left">even voor eeuwig (2026)</div>
@@ -247,7 +256,7 @@ h1{
   </div>
 </div>
 
-<!-- project 2 -->
+<!-- Project 2 -->
 <div class="project">
   <div class="project-header">
     <div class="project-title-left">levenseter (2025)</div>
@@ -282,7 +291,7 @@ h1{
   </div>
 </div>
 
-<!-- project 3 -->
+<!-- Project 3 -->
 <div class="project">
   <div class="project-header">
     <div class="project-title-left">zullen we een stukje rijden (2025)</div>
@@ -298,7 +307,7 @@ h1{
   </div>
 </div>
 
-<!-- project 4 -->
+<!-- Project 4 -->
 <div class="project">
   <div class="project-header">
     <div class="project-title-left">op een dag (2026)</div>
@@ -364,14 +373,17 @@ const next=document.getElementById("next");
 let currentImages=[];
 let currentIndex=0;
 
-document.querySelectorAll(".images img").forEach(img=>{
-    img.addEventListener("click", ()=>{
-        const projectImages=[...img.closest(".images").querySelectorAll("img")];
-        currentImages=projectImages.map(i=>i.src);
-        currentIndex=projectImages.indexOf(img);
-        openLightbox();
+// Disable lightbox on mobile
+if(window.innerWidth > 700){
+    document.querySelectorAll(".images img").forEach(img=>{
+        img.addEventListener("click", ()=>{
+            const projectImages=[...img.closest(".images").querySelectorAll("img")];
+            currentImages=projectImages.map(i=>i.src);
+            currentIndex=projectImages.indexOf(img);
+            openLightbox();
+        });
     });
-});
+}
 
 function openLightbox(){
     lightbox.style.display="flex";
