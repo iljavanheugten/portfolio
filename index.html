@@ -39,14 +39,6 @@ h1 a{
     text-decoration:none;
 }
 
-h1 svg{
-    width:1em;
-    height:1em;
-    fill:none;
-    stroke:white;
-    stroke-width:2;
-}
-
 .project{
     margin-bottom:60px;
 }
@@ -136,108 +128,6 @@ h1 svg{
         height:150px;
     }
 }
-
-/* lightbox */
-#lightbox{
-    position:fixed;
-    inset:0;
-    background: rgba(0,0,0,0.9); /* semi-transparent background */
-    display:none;
-    align-items:center;
-    justify-content:center;
-    z-index:1000;
-}
-
-.lightbox-inner{
-    width:95%;
-    max-width:1200px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-}
-
-.lightbox-top{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    width:100%;
-    justify-content:center;
-    position:relative;
-}
-
-#lightbox-img{
-    width:100%;
-    height:auto;
-    display:block;
-    max-height:80vh;
-}
-
-#prev,
-#next{
-    background:none;
-    border:none;
-    color:white;
-    font-size:50px;
-    cursor:pointer;
-    user-select:none;
-    position:absolute;
-    top:50%;
-    transform:translateY(-50%);
-    z-index:10;
-}
-
-#prev{ left:-60px; }
-#next{ right:-60px; }
-
-/* Thumbnails row fully opaque */
-.lightbox-thumbs{
-    display:flex;
-    gap:10px;
-    margin-top:15px;
-    overflow-x:auto;
-    padding-bottom:6px;
-    cursor: grab;
-    width:100%;
-    max-width:100%;
-    background:black; /* fully opaque */
-    scrollbar-width: thin;
-    scrollbar-color: #555 black;
-}
-
-.lightbox-thumbs::-webkit-scrollbar {
-    height: 10px;
-}
-
-.lightbox-thumbs::-webkit-scrollbar-track {
-    background: black;
-}
-
-.lightbox-thumbs::-webkit-scrollbar-thumb {
-    background-color: #555;
-    border-radius: 5px;
-}
-
-.lightbox-thumbs::-webkit-scrollbar-thumb:hover {
-    background-color: #888;
-}
-
-.lightbox-thumbs img{
-    height:100px;
-    cursor:pointer;
-    opacity:0.6;
-    flex-shrink:0;
-}
-
-.lightbox-thumbs img.active{
-    opacity:1;
-}
-
-/* Disable lightbox entirely on small screens */
-@media (max-width: 700px){
-    #lightbox{
-        display:none !important;
-    }
-}
 </style>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -248,7 +138,7 @@ h1 svg{
 
 <h1>
     ilja van heugten
-    <a href="https://instagram.com/iljavanheugten" target="_blank" aria-label="Instagram">
+    <a href="https://instagram.com/iljavanheugten" target="_blank">
         <img src="instagram.webp" alt="Instagram"
              style="width:0.8em; height:0.8em; filter: invert(1); display:inline-block; transform: translateY(-3px);">
     </a>
@@ -352,20 +242,8 @@ h1 svg{
   </div>
 </div>
 
-<!-- lightbox -->
-<div id="lightbox">
-    <div class="lightbox-inner">
-        <div class="lightbox-top">
-            <button id="prev">&#10094;</button>
-            <img id="lightbox-img">
-            <button id="next">&#10095;</button>
-        </div>
-        <div class="lightbox-thumbs"></div>
-    </div>
-</div>
-
 <script>
-// Drag scroll function
+// Drag scroll
 function initDragScroll(container){
     let isDown=false,startX,scrollStart;
     container.querySelectorAll('img').forEach(img=>img.draggable=false);
@@ -385,85 +263,8 @@ function initDragScroll(container){
         container.scrollLeft=scrollStart-walk;
     });
 }
+
 document.querySelectorAll('.images').forEach(initDragScroll);
-
-// Lightbox logic
-const lightbox=document.getElementById("lightbox");
-const lightboxImg=document.getElementById("lightbox-img");
-const thumbsContainer=document.querySelector(".lightbox-thumbs");
-const prev=document.getElementById("prev");
-const next=document.getElementById("next");
-
-let currentImages=[];
-let currentIndex=0;
-
-// Desktop only
-if(window.innerWidth>700){
-    document.querySelectorAll(".images img").forEach(img=>{
-        let startX=0, startY=0, isDragging=false;
-
-        img.addEventListener("mousedown", e=>{
-            startX=e.clientX; startY=e.clientY; isDragging=false;
-        });
-        img.addEventListener("mousemove", e=>{
-            if(Math.abs(e.clientX-startX)>5 || Math.abs(e.clientY-startY)>5) isDragging=true;
-        });
-        img.addEventListener("mouseup", e=>{
-            if(!isDragging){
-                const projectImages=[...img.closest(".images").querySelectorAll("img")];
-                currentImages=projectImages.map(i=>i.src);
-                currentIndex=projectImages.indexOf(img);
-                openLightbox();
-            }
-        });
-    });
-}
-
-function openLightbox(){
-    lightbox.style.display="flex";
-    renderThumbs();
-    updateImage();
-}
-
-function updateImage(){
-    lightboxImg.src=currentImages[currentIndex];
-    [...thumbsContainer.children].forEach((t,i)=>t.classList.toggle("active",i===currentIndex));
-}
-
-function renderThumbs(){
-    thumbsContainer.innerHTML="";
-    currentImages.forEach((src,i)=>{
-        const t=document.createElement("img");
-        t.src=src;
-        thumbsContainer.appendChild(t);
-    });
-    initDragScroll(thumbsContainer);
-
-    // Drag-safe click for thumbnails
-    thumbsContainer.querySelectorAll("img").forEach(img=>{
-        let startX=0,startY=0,isDragging=false;
-        img.addEventListener("mousedown", e=>{startX=e.clientX; startY=e.clientY; isDragging=false;});
-        img.addEventListener("mousemove", e=>{ if(Math.abs(e.clientX-startX)>5 || Math.abs(e.clientY-startY)>5) isDragging=true;});
-        img.addEventListener("mouseup", e=>{
-            if(!isDragging){
-                const index=Array.from(img.parentNode.children).indexOf(img);
-                currentIndex=index;
-                updateImage();
-            }
-        });
-    });
-}
-
-prev.onclick=()=>{ currentIndex=(currentIndex-1+currentImages.length)%currentImages.length; updateImage(); };
-next.onclick=()=>{ currentIndex=(currentIndex+1)%currentImages.length; updateImage(); };
-
-// Close lightbox on click outside
-lightbox.addEventListener("click", e=>{ if(e.target===lightbox) lightbox.style.display="none"; });
-
-// Close lightbox with Escape
-window.addEventListener("keydown", e=>{
-    if(e.key==="Escape" && lightbox.style.display==="flex") lightbox.style.display="none";
-});
 </script>
 
 </body>
