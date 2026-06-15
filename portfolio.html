@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #000;
+      color: #fff;
+      font-family: -apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .projects {
+      padding: 48px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 64px;
+    }
+
+    .project {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .project-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .project-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .project-role {
+      font-size: 15px;
+      font-weight: 400;
+      color: #ccc;
+      text-align: right;
+    }
+
+    .project-images {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+    }
+
+    .project-images img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      display: block;
+    }
+
+    .project-images .placeholder {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: #1a1a1a;
+    }
+  </style>
+</head>
+<body>
+  <div class="projects">
+
+    <div class="project">
+      <div class="project-meta">
+        <span class="project-title">Even voor eeuwig</span>
+        <span class="project-role">dop, gaffer &amp; colorist</span>
+      </div>
+      <div class="project-images">
+        <div class="placeholder"></div>
+        <div class="placeholder"></div>
+        <div class="placeholder"></div>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-meta">
+        <span class="project-title">De ijzeren jungle</span>
+        <span class="project-role">gaffer &amp; colorist</span>
+      </div>
+      <div class="project-images">
+        <div class="placeholder"></div>
+        <div class="placeholder"></div>
+        <div class="placeholder"></div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
