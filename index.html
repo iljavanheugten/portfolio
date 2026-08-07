@@ -51,13 +51,13 @@
     }
 
     .project-role.scrolling {
-      animation: marquee 5s linear infinite;
+      animation: marquee 3s linear infinite;
     }
 
     @keyframes marquee {
       0%   { transform: translateX(0); }
-      80%  { transform: translateX(var(--scroll-amount)); }
-      81%  { transform: translateX(0); }
+      85%  { transform: translateX(var(--scroll-amount)); }
+      86%  { transform: translateX(0); animation-timing-function: step-end; }
       100% { transform: translateX(0); }
     }
 
