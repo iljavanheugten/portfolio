@@ -56,7 +56,9 @@
 
     @keyframes marquee {
       0%   { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
+      80%  { transform: translateX(var(--scroll-amount)); }
+      81%  { transform: translateX(0); }
+      100% { transform: translateX(0); }
     }
 
     .project-images {
@@ -136,8 +138,9 @@
   <script>
     document.querySelectorAll('.project-role').forEach(role => {
       const wrap = role.parentElement;
-      if (role.scrollWidth > wrap.clientWidth) {
-        role.textContent = role.textContent + '\u00a0\u00a0\u00a0\u00a0\u00a0' + role.textContent;
+      const overflow = role.scrollWidth - wrap.clientWidth;
+      if (overflow > 0) {
+        role.style.setProperty('--scroll-amount', `-${overflow}px`);
         role.classList.add('scrolling');
       }
     });
