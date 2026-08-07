@@ -38,17 +38,25 @@
       flex-shrink: 0;
     }
 
+    .project-role-wrap {
+      overflow: hidden;
+      min-width: 0;
+    }
+
     .project-role {
       font-size: 15px;
       font-weight: 400;
       white-space: nowrap;
-      overflow-x: auto;
-      scrollbar-width: none;
-      text-align: right;
+      display: inline-block;
     }
 
-    .project-role::-webkit-scrollbar {
-      display: none;
+    .project-role.scrolling {
+      animation: marquee 5s linear infinite;
+    }
+
+    @keyframes marquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
     }
 
     .project-images {
@@ -77,7 +85,7 @@
   <div class="project">
     <div class="project-meta">
       <span class="project-title">de ijzeren jungle</span>
-      <span class="project-role">gaffer &amp; colorist</span>
+      <div class="project-role-wrap"><span class="project-role">gaffer &amp; colorist</span></div>
     </div>
     <div class="project-images">
       <img src="DeIJzerenJungle/01.webp" alt="de ijzeren jungle">
@@ -95,7 +103,7 @@
   <div class="project">
     <div class="project-meta">
       <span class="project-title">even voor eeuwig</span>
-      <span class="project-role">dop, gaffer &amp; colorist</span>
+      <div class="project-role-wrap"><span class="project-role">dop, gaffer &amp; colorist</span></div>
     </div>
     <div class="project-images">
       <img src="EvenVoorEeuwig/01.webp" alt="even voor eeuwig">
@@ -110,7 +118,7 @@
   <div class="project">
     <div class="project-meta">
       <span class="project-title">levenseter</span>
-      <span class="project-role">dop, gaffer &amp; colorist</span>
+      <div class="project-role-wrap"><span class="project-role">dop, gaffer &amp; colorist</span></div>
     </div>
     <div class="project-images">
       <img src="Levenseter/01.webp" alt="levenseter">
@@ -124,6 +132,16 @@
       <img src="Levenseter/09.webp" alt="levenseter">
     </div>
   </div>
+
+  <script>
+    document.querySelectorAll('.project-role').forEach(role => {
+      const wrap = role.parentElement;
+      if (role.scrollWidth > wrap.clientWidth) {
+        role.textContent = role.textContent + '\u00a0\u00a0\u00a0\u00a0\u00a0' + role.textContent;
+        role.classList.add('scrolling');
+      }
+    });
+  </script>
 
 </body>
 </html>
