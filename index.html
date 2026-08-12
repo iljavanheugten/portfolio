@@ -53,25 +53,6 @@
       font-size: 15px;
       font-weight: 400;
       color: #fff;
-      white-space: nowrap;
-      overflow: hidden;
-      display: block;
-    }
-
-    .project-role-inner {
-      display: inline-block;
-      white-space: nowrap;
-    }
-
-    .project-role-inner.scrolling {
-      animation: marquee 3s linear infinite;
-    }
-
-    @keyframes marquee {
-      0%   { transform: translateX(0); }
-      85%  { transform: translateX(var(--scroll-amount)); }
-      86%  { transform: translateX(0); animation-timing-function: step-end; }
-      100% { transform: translateX(0); }
     }
 
     .project-images {
@@ -104,7 +85,7 @@
         <span class="project-tag">short</span>
         <span class="project-title">de ijzeren jungle</span>
       </div>
-      <div class="project-role"><span class="project-role-inner">gaffer & colorist</span></div>
+      <div class="project-role">gaffer & colorist</div>
     </div>
     <div class="project-images">
       <img src="DeIJzerenJungle/01.webp" alt="de ijzeren jungle">
@@ -125,7 +106,7 @@
         <span class="project-tag">short</span>
         <span class="project-title">even voor eeuwig</span>
       </div>
-      <div class="project-role"><span class="project-role-inner">director of photography, gaffer & colorist</span></div>
+      <div class="project-role">d.o.p., gaffer & colorist</div>
     </div>
     <div class="project-images">
       <img src="EvenVoorEeuwig/01.webp" alt="even voor eeuwig">
@@ -143,7 +124,7 @@
         <span class="project-tag">short</span>
         <span class="project-title">levenseter</span>
       </div>
-      <div class="project-role"><span class="project-role-inner">director of photography, gaffer & colorist</span></div>
+      <div class="project-role">d.o.p., gaffer & colorist</div>
     </div>
     <div class="project-images">
       <img src="Levenseter/01.webp" alt="levenseter">
@@ -157,16 +138,6 @@
       <img src="Levenseter/09.webp" alt="levenseter">
     </div>
   </div>
-  <script>
-    document.querySelectorAll('.project-role-inner').forEach(role => {
-      const wrap = role.parentElement;
-      const overflow = role.scrollWidth - wrap.clientWidth;
-      if (overflow > 0) {
-        role.style.setProperty('--scroll-amount', `-${overflow}px`);
-        role.classList.add('scrolling');
-      }
-    });
-  </script>
 
 </body>
 </html>
