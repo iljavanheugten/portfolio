@@ -23,42 +23,36 @@
     }
 
     .project-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
       margin-bottom: 6px;
-      gap: 12px;
+    }
+
+    .project-top {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 2px;
+    }
+
+    .project-tag {
+      font-size: 15px;
+      font-weight: 700;
+      background: #fff;
+      color: #000;
+      padding: 0;
+      white-space: nowrap;
+      line-height: 1;
     }
 
     .project-title {
       font-size: 15px;
       font-weight: 700;
       letter-spacing: 0.01em;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .project-role-wrap {
-      overflow: hidden;
-      min-width: 0;
     }
 
     .project-role {
       font-size: 15px;
       font-weight: 400;
-      white-space: nowrap;
-      display: inline-block;
-    }
-
-    .project-role.scrolling {
-      animation: marquee 3s linear infinite;
-    }
-
-    @keyframes marquee {
-      0%   { transform: translateX(0); }
-      85%  { transform: translateX(var(--scroll-amount)); }
-      86%  { transform: translateX(0); animation-timing-function: step-end; }
-      100% { transform: translateX(0); }
+      color: #fff;
     }
 
     .project-images {
@@ -87,8 +81,11 @@
 
   <div class="project">
     <div class="project-meta">
-      <span class="project-title">de ijzeren jungle</span>
-      <div class="project-role-wrap"><span class="project-role">gaffer &amp; colorist</span></div>
+      <div class="project-top">
+        <span class="project-tag">short</span>
+        <span class="project-title">de ijzeren jungle</span>
+      </div>
+      <div class="project-role">gaffer & colorist</div>
     </div>
     <div class="project-images">
       <img src="DeIJzerenJungle/01.webp" alt="de ijzeren jungle">
@@ -105,8 +102,11 @@
 
   <div class="project">
     <div class="project-meta">
-      <span class="project-title">even voor eeuwig</span>
-      <div class="project-role-wrap"><span class="project-role">dop, gaffer &amp; colorist</span></div>
+      <div class="project-top">
+        <span class="project-tag">short</span>
+        <span class="project-title">even voor eeuwig</span>
+      </div>
+      <div class="project-role">director of photography, gaffer & colorist</div>
     </div>
     <div class="project-images">
       <img src="EvenVoorEeuwig/01.webp" alt="even voor eeuwig">
@@ -120,8 +120,11 @@
 
   <div class="project">
     <div class="project-meta">
-      <span class="project-title">levenseter</span>
-      <div class="project-role-wrap"><span class="project-role">dop, gaffer &amp; colorist</span></div>
+      <div class="project-top">
+        <span class="project-tag">short</span>
+        <span class="project-title">levenseter</span>
+      </div>
+      <div class="project-role">director of photography, gaffer & colorist</div>
     </div>
     <div class="project-images">
       <img src="Levenseter/01.webp" alt="levenseter">
@@ -135,17 +138,6 @@
       <img src="Levenseter/09.webp" alt="levenseter">
     </div>
   </div>
-
-  <script>
-    document.querySelectorAll('.project-role').forEach(role => {
-      const wrap = role.parentElement;
-      const overflow = role.scrollWidth - wrap.clientWidth;
-      if (overflow > 0) {
-        role.style.setProperty('--scroll-amount', `-${overflow}px`);
-        role.classList.add('scrolling');
-      }
-    });
-  </script>
 
 </body>
 </html>
