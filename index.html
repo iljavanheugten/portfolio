@@ -95,6 +95,7 @@
     .top-row .email {
       font-size: 15px;
       font-weight: 400;
+      text-decoration: none;
     }
 
 
@@ -179,6 +180,40 @@
   <div class="contact">
     kvk: 42154300
   </div>
+  <script>
+    document.querySelectorAll('.project-images').forEach(slider => {
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+
+      slider.addEventListener('mousedown', e => {
+        isDown = true;
+        slider.style.cursor = 'grabbing';
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+      });
+
+      slider.addEventListener('mouseleave', () => {
+        isDown = false;
+        slider.style.cursor = 'grab';
+      });
+
+      slider.addEventListener('mouseup', () => {
+        isDown = false;
+        slider.style.cursor = 'grab';
+      });
+
+      slider.addEventListener('mousemove', e => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - slider.offsetLeft;
+        const walk = x - startX;
+        slider.scrollLeft = scrollLeft - walk;
+      });
+
+      slider.style.cursor = 'grab';
+    });
+  </script>
 
 </body>
 </html>
