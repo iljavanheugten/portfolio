@@ -21,24 +21,6 @@
       padding: 24px;
     }
 
-    .top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 40px;
-    }
-
-    .top-row a {
-      color: #fff;
-      text-decoration: none;
-    }
-
-    .top-name {
-      font-size: 15px;
-      font-weight: 400;
-      color: #fff;
-    }
-
     .project {
       margin-bottom: 40px;
     }
@@ -66,17 +48,12 @@
 </head>
 <body>
 
-  <div class="top-row">
-    <a href="/" class="top-name">ilja van heugten</a>
-  </div>
-
   <div id="list"></div>
 
   <script>
     var LIST_URL = "https://films.iljavanheugten.workers.dev/";
     var BASE = "https://pub-6c1cbe22126747058f165aa6b1f95b6d.r2.dev/";
 
-    // DeIJzerenJungle_v1.mov -> "de ijzeren jungle"
     function niceName(key) {
       return key
         .split("/").pop()
