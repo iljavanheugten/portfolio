@@ -1,0 +1,29 @@
+<!doctype html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Films</title>
+<body style="margin:0;background:#000;color:#fff;font-family:sans-serif">
+<div id="list"></div>
+<script>
+  var LIST_URL = "https://films.iljavanheugten.workers.dev/";
+  var BASE = "https://pub-6c1cbe22126747058f165aa6b1f95b6d.r2.dev/";
+  fetch(LIST_URL).then(function (r) { return r.json(); }).then(function (files) {
+    var list = document.getElementById("list");
+    files.forEach(function (f) {
+      var wrap = document.createElement("div");
+      wrap.style.margin = "0 0 24px";
+      var video = document.createElement("video");
+      video.src = BASE + f.key.split("/").map(encodeURIComponent).join("/");
+      video.controls = true;
+      video.playsInline = true;
+      video.preload = "metadata";
+      video.style.cssText = "display:block;width:100%";
+      var name = document.createElement("div");
+      name.textContent = f.key.replace(/\.[^.]+$/, "");
+      name.style.padding = "6px 8px";
+      wrap.appendChild(video);
+      wrap.appendChild(name);
+      list.appendChild(wrap);
+    });
+  });
+</script>
